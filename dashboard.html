@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+<div class="logo">
+
+<h2>EMS</h2>
+
+</div>
+
+<ul>
+
+<li class="active">
+
+<a href="dashboard.html">
+
+<i class="fa-solid fa-house"></i>
+
+Dashboard
+
+</a>
+
+</li>
+
+<li>
+
+<a href="employees.html">
+
+<i class="fa-solid fa-users"></i>
+
+Employees
+
+</a>
+
+</li>
+
+<li>
+
+<a href="#">
+
+<i class="fa-solid fa-building"></i>
+
+Departments
+
+</a>
+
+</li>
+
+<li>
+
+<a href="#">
+
+<i class="fa-solid fa-chart-line"></i>
+
+Reports
+
+</a>
+
+</li>
+
+<li>
+
+<a href="#" onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+Logout
+
+</a>
+
+</li>
+
+</ul>
+
+</div>
+
+<!-- Main -->
+
+<div class="main">
+
+<header>
+
+<div>
+
+<h1>Dashboard</h1>
+
+<p id="greeting">
+
+Welcome Admin
+
+</p>
+
+</div>
+
+<div class="profile">
+
+<i class="fa-solid fa-user-circle"></i>
+
+<div>
+
+<h3>Administrator</h3>
+
+<p id="today"></p>
+
+</div>
+
+</div>
+
+</header>
+
+<!-- Cards -->
+
+<div class="cards">
+
+<div class="card blue">
+
+<i class="fa-solid fa-users"></i>
+
+<h3>Total Employees</h3>
+
+<h1 id="employeeCount">
+
+0
+
+</h1>
+
+</div>
+
+<div class="card green">
+
+<i class="fa-solid fa-building"></i>
+
+<h3>Departments</h3>
+
+<h1>
+
+6
+
+</h1>
+
+</div>
+
+<div class="card orange">
+
+<i class="fa-solid fa-indian-rupee-sign"></i>
+
+<h3>Total Salary</h3>
+
+<h1 id="salaryCount">
+
+₹0
+
+</h1>
+
+</div>
+
+<div class="card red">
+
+<i class="fa-solid fa-user-plus"></i>
+
+<h3>Add Employee</h3>
+
+<a href="employees.html" class="card-btn">
+
+Open
+
+</a>
+
+</div>
+
+</div>
+
+<!-- Quick Actions -->
+
+<section class="quick-actions">
+
+<h2>
+
+Quick Actions
+
+</h2>
+
+<div class="action-grid">
+
+<div class="action-card">
+
+<i class="fa-solid fa-user-plus"></i>
+
+<h3>Add Employee</h3>
+
+<p>
+
+Create a new employee record.
+
+</p>
+
+<a href="employees.html">
+
+Add Now
+
+</a>
+
+</div>
+
+<div class="action-card">
+
+<i class="fa-solid fa-list"></i>
+
+<h3>Employee List</h3>
+
+<p>
+
+Manage all employees.
+
+</p>
+
+<a href="employees.html">
+
+View
+
+</a>
+
+</div>
+
+<div class="action-card">
+
+<i class="fa-solid fa-chart-column"></i>
+
+<h3>Reports</h3>
+
+<p>
+
+View company reports.
+
+</p>
+
+<a href="#">
+
+Open
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- Recent Employees -->
+
+<section class="recent">
+
+<h2>
+
+Recent Employees
+
+</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Department</th>
+
+<th>Salary</th>
+
+</tr>
+
+</thead>
+
+<tbody id="recentEmployees">
+
+<tr>
+
+<td colspan="4">
+
+No Employees Found
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</section>
+
+</div>
+
+<script src="script.js"></script>
+
+<script>
+
+// Login Check
+
+if(localStorage.getItem("loggedIn")!="true"){
+
+window.location="index.html";
+
+}
+
+// Employee Count
+
+let employees=JSON.parse(localStorage.getItem("employees"))||[];
+
+document.getElementById("employeeCount").innerHTML=employees.length;
+
+// Salary Count
+
+let salary=0;
+
+employees.forEach(emp=>{
+
+salary+=Number(emp.salary||0);
+
+});
+
+document.getElementById("salaryCount").innerHTML="₹"+salary;
+
+// Greeting
+
+let hour=new Date().getHours();
+
+let greet="";
+
+if(hour<12){
+
+greet="Good Morning ☀";
+
+}
+
+else if(hour<18){
+
+greet="Good Afternoon 🌤";
+
+}
+
+else{
+
+greet="Good Evening 🌙";
+
+}
+
+document.getElementById("greeting").innerHTML=greet+", Administrator";
+
+// Date
+
+document.getElementById("today").innerHTML=new Date().toDateString();
+
+// Recent Employees
+
+let recent=document.getElementById("recentEmployees");
+
+recent.innerHTML="";
+
+if(employees.length==0){
+
+recent.innerHTML="<tr><td colspan='4'>No Employees Found</td></tr>";
+
+}else{
+
+employees.slice(-5).reverse().forEach(emp=>{
+
+recent.innerHTML+=`
+
+<tr>
+
+<td>${emp.id}</td>
+
+<td>${emp.name}</td>
+
+<td>${emp.department}</td>
+
+<td>₹${emp.salary}</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
